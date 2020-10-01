@@ -9,6 +9,7 @@ export const getEntry = /* GraphQL */ `
       description
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -25,6 +26,7 @@ export const listEntrys = /* GraphQL */ `
         description
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

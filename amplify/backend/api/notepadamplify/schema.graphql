@@ -1,4 +1,4 @@
-type Entry @model {
+type Entry @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   created: String!
   description: String!

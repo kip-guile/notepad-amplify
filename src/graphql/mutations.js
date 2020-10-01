@@ -12,6 +12,7 @@ export const createEntry = /* GraphQL */ `
       description
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -26,6 +27,7 @@ export const updateEntry = /* GraphQL */ `
       description
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -40,6 +42,7 @@ export const deleteEntry = /* GraphQL */ `
       description
       createdAt
       updatedAt
+      owner
     }
   }
 `;

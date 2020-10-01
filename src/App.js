@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react'
+import { Input, Button, Comment, Tooltip } from 'antd'
+import moment from 'moment'
 import '@aws-amplify/ui/dist/style.css'
+import './App.css'
 import { API, graphqlOperation } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
 import { createEntry, deleteEntry, updateEntry } from './graphql/mutations'
 import { listEntrys } from './graphql/queries'
 
+const { TextArea } = Input
+
 function App() {
   const [entries, setEntries] = useState([])
   const [entry, setEntry] = useState('')
   const [id, setId] = useState('')
+
+  useEffect(() => {
+    getEntries()
+  }, [])
   const getEntries = async () => {
     const result = await API.graphql(graphqlOperation(listEntrys))
     setEntries(result.data.listEntrys.items)
   }
-  useEffect(() => {
-    getEntries()
-  }, [])
   const handleChangeEntry = (event) => {
     setEntry(event.target.value)
   }
@@ -41,6 +47,7 @@ function App() {
     setId('')
   }
   const handleAddEntry = async (event) => {
+    debugger
     event.preventDefault()
     // check if entry exists
     if (hasExistingEntry()) {
@@ -68,32 +75,95 @@ function App() {
     setId(id)
   }
   return (
-    <div className='flex flex-column items-center justify-center pa3 bg-washed-green'>
-      <h1 className='code f2-l'>My Journal</h1>
-      <form onSubmit={handleAddEntry} className='mb3'>
-        <input
+    <div
+      style={{
+        width: '90vw',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <h1 style={{ textAlign: 'center', color: 'white' }}>My Journal</h1>
+      <form
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '60%',
+          alignItems: 'center',
+        }}
+        className='mb3'
+      >
+        <TextArea
+          autosize='true'
+          rows={4}
           type='text'
           value={entry}
           className='pa2 f4'
           placeholder='Make an entry'
           onChange={handleChangeEntry}
         />
-        <button className='pa2 f4' type='submit'>
+        <Button
+          onClick={handleAddEntry}
+          style={{
+            width: '50%',
+            margin: '5px',
+            backgroundColor: id ? '' : '#ff9900',
+            border: '0',
+          }}
+          size='large'
+          type='primary'
+          danger={id ? true : false}
+          block
+        >
           {id ? 'Update Entry' : 'Add Entry'}
-        </button>
+        </Button>
       </form>
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '70%',
+          alignItems: 'center',
+        }}
+      >
         {entries.map((entry) => (
-          <div key={entry.id} className='flex items-center'>
-            <li onClick={() => handleSetNote(entry)} className='list pa1 f3'>
-              {entry.description}
-            </li>
-            <button
-              onClick={() => handleDeleteEntry(entry.id)}
-              className='bg-transparent bn f4'
-            >
-              <span>x</span>
-            </button>
+          <div
+            style={{
+              backgroundColor: 'whitesmoke',
+              marginBottom: '2rem',
+              minWidth: '100%',
+              padding: '1rem',
+            }}
+            key={entry.id}
+          >
+            <Comment
+              actions={[
+                <Button
+                  style={{
+                    marginRight: '10px',
+                    backgroundColor: '#ff9900',
+                    border: '0',
+                  }}
+                  type='primary'
+                >
+                  <span onClick={() => handleSetNote(entry)}>Edit</span>
+                </Button>,
+                <Button danger>
+                  <span onClick={() => handleDeleteEntry(entry.id)}>
+                    Delete
+                  </span>
+                </Button>,
+              ]}
+              content={<p>{entry.description}</p>}
+              datetime={
+                <Tooltip
+                  title={moment(entry.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                >
+                  <span>{moment(entry.createdAt).fromNow()}</span>
+                </Tooltip>
+              }
+            />
           </div>
         ))}
       </div>
@@ -101,4 +171,7 @@ function App() {
   )
 }
 
-export default withAuthenticator(App, { includeGreetings: true })
+export default withAuthenticator(App, {
+  includeGreetings: true,
+  usernameAttributes: 'email',
+})

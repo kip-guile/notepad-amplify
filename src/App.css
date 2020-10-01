@@ -1,0 +1,10 @@
+@import '~antd/dist/antd.css';
+html,
+body {
+  background-color: #292d3e;
+  font-family: 'Crimson Text, serif';
+  display: flex;
+  justify-content: center;
+  /* color: white; */
+  box-sizing: border-box;
+}
