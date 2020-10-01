@@ -16,3 +16,4 @@ To get the server running locally:
 - npm run start
 
 - deployed site: https://dev.d30uyi9rw4lyf1.amplifyapp.com/
+- login & pass: miller.roob@ethereal.email
