@@ -14,3 +14,5 @@ To get the server running locally:
 - clone this repo
 - npm install to install required dependencies
 - npm run start
+
+- deployed site: https://dev.d30uyi9rw4lyf1.amplifyapp.com/
